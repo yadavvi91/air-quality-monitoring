@@ -29,12 +29,18 @@ export function AQI() {
   ];
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
+  let counter = 0;
+  let shouldOpen = true;
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
   useEffect(() => {
     ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log("connected");
+      shouldOpen = false;
     };
+  }, [shouldOpen]);
+
+  useEffect(() => {
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
       const message = JSON.parse(event.data);
@@ -56,6 +62,11 @@ export function AQI() {
       setData(message);
       setHistoricalData((historicalData[timeStamp] = newHistoricalData));
       console.log("ABCD");
+
+      counter++;
+      if (counter > 5) {
+        ws.close();
+      }
     };
 
     ws.onclose = () => {
