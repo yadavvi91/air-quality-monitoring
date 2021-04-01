@@ -18,8 +18,10 @@ function App() {
       const newHistoricalData = {};
       const timeStamp = Math.floor(Date.now());
 
-      for (const cityWiseData in message) {
-        const { city, aqi } = cityWiseData;
+      for (const cityWiseData of message) {
+        const city = cityWiseData["city"];
+        const aqi = cityWiseData["aqi"];
+        console.log(`city: ${city}, aqi: ${aqi}`);
         newHistoricalData[city] = {
           aqi,
           timeStamp
