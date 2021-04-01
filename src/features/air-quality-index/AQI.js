@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export function AQI() {
-  const data = [
+  const oldData = [
     {
       city: "Mumbai",
       aqi: 182,
@@ -27,7 +27,7 @@ export function AQI() {
       text: "A few seconds ago"
     }
   ];
-  // const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
   useEffect(() => {
@@ -37,7 +37,7 @@ export function AQI() {
     };
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
-      /* const message = JSON.parse(event.data);
+      const message = JSON.parse(event.data);
       const newHistoricalData = {};
       const timeStamp = Math.floor(Date.now());
 
@@ -55,7 +55,7 @@ export function AQI() {
       console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
       setData(message);
       setHistoricalData((historicalData[timeStamp] = newHistoricalData));
-      console.log("ABCD"); */
+      console.log("ABCD");
     };
 
     ws.onclose = () => {
@@ -66,7 +66,7 @@ export function AQI() {
 
   return (
     <div>
-      {data.map((cityData) => (
+      {oldData.map((cityData) => (
         <div>
           <div>{cityData.city}</div>
           <div>{cityData.aqi}</div>
