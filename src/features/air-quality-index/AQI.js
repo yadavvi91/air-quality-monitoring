@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import "./AQI.css";
 
 export function AQI() {
   const oldData = [
     {
       city: "Mumbai",
       aqi: 182,
-      category: "Moderate",
+      category: "moderate",
       prevTime: undefined,
       currTime: 1617251117777,
       text: "A few seconds ago"
@@ -13,7 +14,7 @@ export function AQI() {
     {
       city: "Delhi",
       aqi: 300,
-      category: "Poor",
+      category: "poor",
       prevTime: undefined,
       currTime: 1617251117777,
       text: "A few seconds ago"
@@ -21,7 +22,7 @@ export function AQI() {
     {
       city: "Bhubaneswar",
       aqi: 100,
-      category: "Satisfactory",
+      category: "satisfactory",
       prevTime: undefined,
       currTime: 1617251117777,
       text: "A few seconds ago"
@@ -43,7 +44,7 @@ export function AQI() {
   useEffect(() => {
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
-      const message = JSON.parse(event.data);
+      /*const message = JSON.parse(event.data);
       const newHistoricalData = {};
       const timeStamp = Math.floor(Date.now());
 
@@ -66,7 +67,7 @@ export function AQI() {
       counter++;
       if (counter > 5) {
         ws.close();
-      }
+      }*/
     };
 
     ws.onclose = () => {
@@ -76,15 +77,23 @@ export function AQI() {
   });
 
   return (
-    <div>
-      {oldData.map((cityData) => (
-        <div>
-          <div>{cityData.city}</div>
-          <div>{cityData.aqi}</div>
-          <div>{cityData.category}</div>
-          <div>{cityData.text}</div>
+    <div className="aqi_table">
+      <div>
+        <div className="aqi_tr aqi_td">
+          <div className="aqi_td">City</div>
+          <div className="aqi_td">Current AQI</div>
+          <div className="aqi_td">Last updated</div>
         </div>
-      ))}
+      </div>
+      <div>
+        {oldData.map((cityData) => (
+          <div className="aqi_tr">
+            <div className="aqi_td">{cityData.city}</div>
+            <div className={"aqi_td " + cityData.category}>{cityData.aqi}</div>
+            <div className="aqi_td">{cityData.text}</div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

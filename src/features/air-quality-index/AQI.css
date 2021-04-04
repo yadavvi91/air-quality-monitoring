@@ -1,0 +1,76 @@
+.aqi_table {
+  display: flex;
+  flex-flow: column nowrap;
+  font-size: .8rem;
+  margin: 0.5rem;
+  line-height: 1.5;
+  border-bottom: 1px solid #d0d0d0;
+  flex: 1 1 auto;
+
+  max-width: 700px;
+}
+
+.aqi_th {
+  display: none;
+  font-weight: 700;
+  background-color: #f2f2f2;
+}
+
+.aqi_th > .aqi_td {
+  white-space: normal;
+  justify-content: center;
+}
+
+.aqi_tr {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  color: #FFFFFF;
+  background-color: #716b6b;
+}
+
+/*.aqi_tr:nth-of-type(even) {
+  background-color: #f2f2f2;
+}
+
+.aqi_tr:nth-of-type(odd) {
+  background-color: #ffffff;
+}*/
+
+.aqi_td {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 0.5em;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0px;
+  white-space: nowrap;
+  border-bottom: 1px solid #d0d0d0;
+}
+
+.good {
+  color: #55A84F;
+}
+
+.satisfactory {
+  color: #A3C853;
+}
+
+.moderate {
+  color: #FFF833;
+}
+
+.poor {
+  color: #F29C33;
+}
+
+.very_poor {
+  color: #E93F33;
+}
+
+.severe {
+  color: #AF2D24;
+}

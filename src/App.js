@@ -14,14 +14,12 @@ function App() {
           <AQIReference />
         </Route>
         <Route path="/">
-          <header className="App-header">
-            {/*<img src={logo} className="App-logo" alt="logo" />*/}
-            {/*<Counter />*/}
-            <AQI />
-            {/*<p>*/}
-            {/*  Edit <code>src/App.js</code> and save to reload.*/}
-            {/*</p>*/}
-          </header>
+          {/*<img src={logo} className="App-logo" alt="logo" />*/}
+          {/*<Counter />*/}
+          <AQI />
+          {/*<p>*/}
+          {/*  Edit <code>src/App.js</code> and save to reload.*/}
+          {/*</p>*/}
         </Route>
       </Switch>
     </Router>
