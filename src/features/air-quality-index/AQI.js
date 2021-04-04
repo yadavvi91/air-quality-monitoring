@@ -33,11 +33,11 @@ export function AQI() {
   let shouldOpen = true;
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
   useEffect(() => {
-    ws.onopen = () => {
+    /*ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log("connected");
       shouldOpen = false;
-    };
+    };*/
   }, [shouldOpen]);
 
   useEffect(() => {
