@@ -90,7 +90,7 @@ function reducer(state, action) {
     const newConsumableData = [];
     Object.values(newData).forEach((v) => {
       newConsumableData.push(v);
-    })
+    });
     return {
       data: newData,
       consumableData: newConsumableData,
@@ -107,17 +107,30 @@ function reducer(state, action) {
   }
 }
 
+const ws = new WebSocket("ws://city-ws.herokuapp.com");
+
+function startListeningToWebSocket() {
+  console.log("startListeningToWebSocket");
+  ws.onopen = () => {
+    // on connecting, do nothing but log it to the console
+    console.log("connected");
+  };
+}
+
+function stopListeningToWebSocket() {
+  console.log("stopListeningToWebSocket");
+  ws.onopen = () => {
+    // on connecting, do nothing but log it to the console
+    console.log("connected");
+  };
+}
+
 export function AQI() {
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
   const [state, dispatch] = useReducer(reducer, initialState);
-  const ws = new WebSocket("ws://city-ws.herokuapp.com");
 
   useEffect(() => {
-    ws.onopen = () => {
-      // on connecting, do nothing but log it to the console
-      console.log("connected");
-    };
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
       const message = JSON.parse(event.data);
@@ -145,29 +158,31 @@ export function AQI() {
       });
     };
 
-    ws.onclose = () => {
-      console.log("disconnected");
-      // automatically try to reconnect on connection loss
-    };
   }, []);
 
   return (
-    <div className="aqi_table">
-      <div>
-        <div className="aqi_tr aqi_td">
-          <div className="aqi_td">City</div>
-          <div className="aqi_td">Current AQI</div>
-          <div className="aqi_td">Last updated</div>
-        </div>
-      </div>
-      <div>
-        {state.consumableData.map((cityData) => (
-          <div className="aqi_tr">
-            <div className="aqi_td">{cityData.city}</div>
-            <div className={"aqi_td " + cityData.category}>{cityData.aqi}</div>
-            <div className="aqi_td">{cityData.text}</div>
+    <div>
+      <button onClick={(event) => startListeningToWebSocket()}>Start</button>
+      <button onClick={(event) => stopListeningToWebSocket()}>Stop</button>
+      <div className="aqi_table">
+        <div>
+          <div className="aqi_tr aqi_td">
+            <div className="aqi_td">City</div>
+            <div className="aqi_td">Current AQI</div>
+            <div className="aqi_td">Last updated</div>
           </div>
-        ))}
+        </div>
+        <div>
+          {state.consumableData.map((cityData) => (
+            <div className="aqi_tr">
+              <div className="aqi_td">{cityData.city}</div>
+              <div className={"aqi_td " + cityData.category}>
+                {cityData.aqi}
+              </div>
+              <div className="aqi_td">{cityData.text}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
