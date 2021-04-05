@@ -72,13 +72,19 @@ function reducer(state, action) {
         text
       };
     });
+    const newConsumableData = [];
+    Object.values(newData).forEach((v) => {
+      newConsumableData.push(v);
+    })
     return {
       data: newData,
+      consumableData: newConsumableData,
       historicalData
     };
   } else if (action.type === "historical-data-change") {
     return {
       data,
+      consumableData,
       historicalData: [...historicalData, action.historicalData]
     };
   } else {
@@ -146,7 +152,7 @@ export function AQI() {
         </div>
       </div>
       <div>
-        {oldData.map((cityData) => (
+        {state.consumableData.map((cityData) => (
           <div className="aqi_tr">
             <div className="aqi_td">{cityData.city}</div>
             <div className={"aqi_td " + cityData.category}>{cityData.aqi}</div>
