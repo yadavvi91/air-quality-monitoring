@@ -37,7 +37,10 @@ function reducer(state, action) {
   const { data, historicalData } = state;
   if (action.type === "data-change") {
     return {
-      data: [...data, action.data],
+      data: {
+        ...data,
+        ...action.data
+      },
       historicalData
     };
   } else if (action.type === "historical-data-change") {
