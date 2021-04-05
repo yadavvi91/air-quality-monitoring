@@ -64,9 +64,24 @@ function reducer(state, action) {
           text = `${timePassed.toFixed(2)} seconds ago`;
         }
       }
+      let category = undefined;
+      if (newAQI > 0 && newAQI < 51) {
+        category = "good";
+      } else if (newAQI > 50 && newAQI < 101) {
+        category = "satisfactory";
+      } else if (newAQI > 100 && newAQI < 201) {
+        category = "moderate";
+      } else if (newAQI > 200 && newAQI < 301) {
+        category = "poor";
+      } else if (newAQI > 300 && newAQI < 401) {
+        category = "very_poor";
+      } else if (newAQI > 401) {
+        category = "severe";
+      }
       newData[newCity] = {
         city: newCity,
         aqi: newAQI.toFixed(2),
+        category,
         prevTime,
         currTime,
         text
