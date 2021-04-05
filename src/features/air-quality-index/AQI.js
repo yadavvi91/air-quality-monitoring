@@ -56,8 +56,22 @@ export function AQI() {
       console.log(`Original Data: ${JSON.stringify(data)}`);
       console.log(`New Data: ${JSON.stringify(message)}`);
       console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
-      setData(message);
-      setHistoricalData((historicalData[timeStamp] = newHistoricalData));
+      setData((data) => {
+        return {
+          data: {
+            ...data,
+            message
+          }
+        };
+      });
+      setHistoricalData((historicalData) => {
+        return {
+          historicalData: {
+            ...historicalData,
+            [timeStamp]: newHistoricalData
+          }
+        }
+      });
       console.log("ABCD");
 
       counter++;
