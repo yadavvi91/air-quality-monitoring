@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./AQI.css";
 
 const oldData = [
@@ -27,9 +27,33 @@ const oldData = [
     text: "A few seconds ago"
   }
 ];
+
+const initialState = {
+  data: [],
+  historicalData: []
+};
+
+function reducer(state, action) {
+  const { data, historicalData } = state;
+  if (action.type === "data-change") {
+    return {
+      data: [...data, action.data],
+      historicalData
+    };
+  } else if (action.type === "historical-data-change") {
+    return {
+      data,
+      historicalData: [...historicalData, action.historicalData]
+    };
+  } else {
+    throw new Error();
+  }
+}
+
 export function AQI() {
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
+  const [state, dispatch] = useReducer(reducer, initialState);
   let counter = 0;
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
 
@@ -56,23 +80,8 @@ export function AQI() {
       console.log(`Original Data: ${JSON.stringify(data)}`);
       console.log(`New Data: ${JSON.stringify(message)}`);
       console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
-      setData((data) => {
-        return {
-          data: {
-            ...data,
-            message
-          }
-        };
-      });
-      setHistoricalData((historicalData) => {
-        return {
-          historicalData: {
-            ...historicalData,
-            [timeStamp]: newHistoricalData
-          }
-        }
-      });
-      console.log("ABCD");
+      dispatch({type: 'data-change', data: message})
+      dispatch({type: 'historical-data-change', historicalData: newHistoricalData})
 
       counter++;
       if (counter > 5) {
