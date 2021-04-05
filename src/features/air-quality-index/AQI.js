@@ -29,18 +29,51 @@ const oldData = [
 ];
 
 const initialState = {
-  data: [],
+  data: {},
+  consumableData: [],
   historicalData: []
 };
 
 function reducer(state, action) {
-  const { data, historicalData } = state;
+  const { data, consumableData, historicalData } = state;
   if (action.type === "data-change") {
+    const newData = { ...data };
+    action.data.forEach((d) => {
+      const { city: newCity, aqi: newAQI } = d;
+      let prevTime = undefined;
+      let currTime = undefined;
+      let text = undefined;
+      console.log(
+        `city: ${newCity}, aqi: ${newAQI}, timeStamp: ${action.timeStamp}`
+      );
+      if (newData[newCity] === undefined) {
+        prevTime = undefined;
+        currTime = action.timeStamp;
+        text = "A few seconds ago";
+      } else {
+        prevTime = newData[newCity].currTime;
+        currTime = action.timeStamp;
+        const timePassed = (currTime - prevTime) / 1000;
+        if (timePassed / 43200 > 1) {
+          text = `${timePassed % 43200} hours ago`;
+        } else if (timePassed / 3600 > 1) {
+          text = `${timePassed % 3600} minutes ago`;
+        } else if (timePassed / 60 > 1) {
+          text = `${timePassed % 60} seconds ago`;
+        } else {
+          text = `${timePassed} seconds ago`;
+        }
+      }
+      newData[newCity] = {
+        city: newCity,
+        aqi: newAQI,
+        prevTime,
+        currTime,
+        text
+      };
+    });
     return {
-      data: {
-        ...data,
-        ...action.data
-      },
+      data: newData,
       historicalData
     };
   } else if (action.type === "historical-data-change") {
