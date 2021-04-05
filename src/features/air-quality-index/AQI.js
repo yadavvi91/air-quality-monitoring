@@ -1,50 +1,46 @@
 import React, { useEffect, useState } from "react";
 import "./AQI.css";
 
+const oldData = [
+  {
+    city: "Mumbai",
+    aqi: 182,
+    category: "moderate",
+    prevTime: undefined,
+    currTime: 1617251117777,
+    text: "A few seconds ago"
+  },
+  {
+    city: "Delhi",
+    aqi: 300,
+    category: "poor",
+    prevTime: undefined,
+    currTime: 1617251117777,
+    text: "A few seconds ago"
+  },
+  {
+    city: "Bhubaneswar",
+    aqi: 100,
+    category: "satisfactory",
+    prevTime: undefined,
+    currTime: 1617251117777,
+    text: "A few seconds ago"
+  }
+];
 export function AQI() {
-  const oldData = [
-    {
-      city: "Mumbai",
-      aqi: 182,
-      category: "moderate",
-      prevTime: undefined,
-      currTime: 1617251117777,
-      text: "A few seconds ago"
-    },
-    {
-      city: "Delhi",
-      aqi: 300,
-      category: "poor",
-      prevTime: undefined,
-      currTime: 1617251117777,
-      text: "A few seconds ago"
-    },
-    {
-      city: "Bhubaneswar",
-      aqi: 100,
-      category: "satisfactory",
-      prevTime: undefined,
-      currTime: 1617251117777,
-      text: "A few seconds ago"
-    }
-  ];
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
   let counter = 0;
-  let shouldOpen = true;
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
-  useEffect(() => {
-    /*ws.onopen = () => {
-      // on connecting, do nothing but log it to the console
-      console.log("connected");
-      shouldOpen = false;
-    };*/
-  }, [shouldOpen]);
 
   useEffect(() => {
+    ws.onopen = () => {
+      // on connecting, do nothing but log it to the console
+      console.log("connected");
+    };
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
-      /*const message = JSON.parse(event.data);
+      const message = JSON.parse(event.data);
       const newHistoricalData = {};
       const timeStamp = Math.floor(Date.now());
 
@@ -67,14 +63,14 @@ export function AQI() {
       counter++;
       if (counter > 5) {
         ws.close();
-      }*/
+      }
     };
 
     ws.onclose = () => {
       console.log("disconnected");
       // automatically try to reconnect on connection loss
     };
-  });
+  }, []);
 
   return (
     <div className="aqi_table">
