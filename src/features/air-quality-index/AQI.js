@@ -55,18 +55,18 @@ function reducer(state, action) {
         currTime = action.timeStamp;
         const timePassed = (currTime - prevTime) / 1000;
         if (timePassed / 43200 > 1) {
-          text = `${timePassed % 43200} hours ago`;
+          text = `${(timePassed % 43200).toFixed(2)} hours ago`;
         } else if (timePassed / 3600 > 1) {
-          text = `${timePassed % 3600} minutes ago`;
+          text = `${(timePassed % 3600).toFixed(2)} minutes ago`;
         } else if (timePassed / 60 > 1) {
-          text = `${timePassed % 60} seconds ago`;
+          text = `${(timePassed % 60).toFixed(2)} seconds ago`;
         } else {
-          text = `${timePassed} seconds ago`;
+          text = `${timePassed.toFixed(2)} seconds ago`;
         }
       }
       newData[newCity] = {
         city: newCity,
-        aqi: newAQI,
+        aqi: newAQI.toFixed(2),
         prevTime,
         currTime,
         text
@@ -96,7 +96,6 @@ export function AQI() {
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
   const [state, dispatch] = useReducer(reducer, initialState);
-  let counter = 0;
   const ws = new WebSocket("ws://city-ws.herokuapp.com");
 
   useEffect(() => {
@@ -129,11 +128,6 @@ export function AQI() {
           [timeStamp]: newHistoricalData
         }
       });
-
-      counter++;
-      if (counter > 5) {
-        ws.close();
-      }
     };
 
     ws.onclose = () => {
