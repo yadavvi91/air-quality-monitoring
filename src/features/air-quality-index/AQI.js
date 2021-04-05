@@ -83,8 +83,13 @@ export function AQI() {
       console.log(`Original Data: ${JSON.stringify(data)}`);
       console.log(`New Data: ${JSON.stringify(message)}`);
       console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
-      dispatch({type: 'data-change', data: message})
-      dispatch({type: 'historical-data-change', historicalData: newHistoricalData})
+      dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
+      dispatch({
+        type: "historical-data-change",
+        historicalData: {
+          [timeStamp]: newHistoricalData
+        }
+      });
 
       counter++;
       if (counter > 5) {
