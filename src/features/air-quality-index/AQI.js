@@ -123,21 +123,25 @@ export function AQI() {
   }
 
   useEffect(() => {
-    ws.current = new WebSocket("ws://city-ws.herokuapp.com");
+    if (getAQIData) {
+      ws.current = new WebSocket("ws://city-ws.herokuapp.com");
 
-    ws.current.onopen = () => {
-      console.log("startListeningToWebSocket");
-      // on connecting, do nothing but log it to the console
-      console.log("connected");
-    };
-    return () => {
-      ws.current.onclose = () => {
-        console.log("stopListeningToWebSocket");
+      ws.current.onopen = () => {
+        console.log("startListeningToWebSocket");
         // on connecting, do nothing but log it to the console
         console.log("connected");
       };
+    }
+    return () => {
+      if (getAQIData) {
+        ws.current.onclose = () => {
+          console.log("stopListeningToWebSocket");
+          // on connecting, do nothing but log it to the console
+          console.log("connected");
+        };
+      }
     };
-  }, []);
+  }, [getAQIData]);
 
   useEffect(() => {
     if (!ws.current) return;
