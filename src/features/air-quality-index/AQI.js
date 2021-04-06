@@ -131,14 +131,15 @@ export function AQI() {
         // on connecting, do nothing but log it to the console
         console.log("connected");
       };
+      ws.current.onclose = () => {
+        console.log("stopListeningToWebSocket");
+        // on connecting, do nothing but log it to the console
+        console.log("disconnected");
+      };
     }
     return () => {
       if (getAQIData) {
-        ws.current.onclose = () => {
-          console.log("stopListeningToWebSocket");
-          // on connecting, do nothing but log it to the console
-          console.log("disconnected");
-        };
+        ws.current.close();
       }
     };
   }, [getAQIData]);
