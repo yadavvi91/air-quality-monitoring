@@ -124,45 +124,49 @@ export function AQI() {
   }
 
   useEffect(() => {
-    ws.onopen = () => {
-      console.log("startListeningToWebSocket");
-      // on connecting, do nothing but log it to the console
-      console.log("connected");
-    };
-
-    ws.onmessage = (event) => {
-      // listen to data sent from the websocket server
-      const message = JSON.parse(event.data);
-      const newHistoricalData = {};
-      const timeStamp = Math.floor(Date.now());
-
-      for (const cityWiseData of message) {
-        const city = cityWiseData["city"];
-        const aqi = cityWiseData["aqi"];
-        console.log(`city: ${city}, aqi: ${aqi}`);
-        newHistoricalData[city] = {
-          aqi,
-          timeStamp
-        };
-      }
-      console.log(`Original Data: ${JSON.stringify(data)}`);
-      console.log(`New Data: ${JSON.stringify(message)}`);
-      console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
-      dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
-      dispatch({
-        type: "historical-data-change",
-        historicalData: {
-          [timeStamp]: newHistoricalData
-        }
-      });
-    };
-
-    return () => {
-      ws.onclose = () => {
-        console.log("stopListeningToWebSocket");
+    if (getAQIData) {
+      ws.onopen = () => {
+        console.log("startListeningToWebSocket");
         // on connecting, do nothing but log it to the console
         console.log("connected");
       };
+
+      ws.onmessage = (event) => {
+        // listen to data sent from the websocket server
+        const message = JSON.parse(event.data);
+        const newHistoricalData = {};
+        const timeStamp = Math.floor(Date.now());
+
+        for (const cityWiseData of message) {
+          const city = cityWiseData["city"];
+          const aqi = cityWiseData["aqi"];
+          console.log(`city: ${city}, aqi: ${aqi}`);
+          newHistoricalData[city] = {
+            aqi,
+            timeStamp
+          };
+        }
+        console.log(`Original Data: ${JSON.stringify(data)}`);
+        console.log(`New Data: ${JSON.stringify(message)}`);
+        console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
+        dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
+        dispatch({
+          type: "historical-data-change",
+          historicalData: {
+            [timeStamp]: newHistoricalData
+          }
+        });
+      };
+    }
+
+    return () => {
+      if (getAQIData) {
+        ws.onclose = () => {
+          console.log("stopListeningToWebSocket");
+          // on connecting, do nothing but log it to the console
+          console.log("connected");
+        };
+      }
     };
   }, [getAQIData]);
 
