@@ -43,9 +43,9 @@ function reducer(state, action) {
       let prevTime = undefined;
       let currTime = undefined;
       let text = undefined;
-      console.log(
-        `city: ${newCity}, aqi: ${newAQI}, timeStamp: ${action.timeStamp}`
-      );
+      // console.log(
+      //   `city: ${newCity}, aqi: ${newAQI}, timeStamp: ${action.timeStamp}`
+      // );
       if (newData[newCity] === undefined) {
         prevTime = undefined;
         currTime = action.timeStamp;
@@ -137,7 +137,7 @@ export function AQI() {
         ws.current.onclose = () => {
           console.log("stopListeningToWebSocket");
           // on connecting, do nothing but log it to the console
-          console.log("connected");
+          console.log("disconnected");
         };
       }
     };
@@ -157,15 +157,15 @@ export function AQI() {
       for (const cityWiseData of message) {
         const city = cityWiseData["city"];
         const aqi = cityWiseData["aqi"];
-        console.log(`city: ${city}, aqi: ${aqi}`);
+        // console.log(`city: ${city}, aqi: ${aqi}`);
         newHistoricalData[city] = {
           aqi,
           timeStamp
         };
       }
-      console.log(`Original Data: ${JSON.stringify(data)}`);
-      console.log(`New Data: ${JSON.stringify(message)}`);
-      console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
+      // console.log(`Original Data: ${JSON.stringify(data)}`);
+      // console.log(`New Data: ${JSON.stringify(message)}`);
+      // console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
       dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
       dispatch({
         type: "historical-data-change",
@@ -190,7 +190,7 @@ export function AQI() {
         </div>
         <div>
           {state.consumableData.map((cityData) => (
-            <div className="aqi_tr">
+            <div className="aqi_tr" key={cityData.city}>
               <div className="aqi_td">{cityData.city}</div>
               <div className={"aqi_td " + cityData.category}>
                 {cityData.aqi}
