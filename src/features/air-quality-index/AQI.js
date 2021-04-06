@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./AQI.css";
 
 const oldData = [
@@ -107,13 +107,12 @@ function reducer(state, action) {
   }
 }
 
-const ws = new WebSocket("ws://city-ws.herokuapp.com");
-
 export function AQI() {
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const ws = useRef(null);
 
   function startListeningToWebSocket() {
     setGetAQIData(true);
@@ -124,49 +123,52 @@ export function AQI() {
   }
 
   useEffect(() => {
-    if (getAQIData) {
-      ws.onopen = () => {
-        console.log("startListeningToWebSocket");
+    ws.current = new WebSocket("ws://city-ws.herokuapp.com");
+
+    ws.current.onopen = () => {
+      console.log("startListeningToWebSocket");
+      // on connecting, do nothing but log it to the console
+      console.log("connected");
+    };
+    return () => {
+      ws.current.onclose = () => {
+        console.log("stopListeningToWebSocket");
         // on connecting, do nothing but log it to the console
         console.log("connected");
       };
+    };
+  }, []);
 
-      ws.onmessage = (event) => {
-        // listen to data sent from the websocket server
-        const message = JSON.parse(event.data);
-        const newHistoricalData = {};
-        const timeStamp = Math.floor(Date.now());
+  useEffect(() => {
+    if (!ws.current) return;
 
-        for (const cityWiseData of message) {
-          const city = cityWiseData["city"];
-          const aqi = cityWiseData["aqi"];
-          console.log(`city: ${city}, aqi: ${aqi}`);
-          newHistoricalData[city] = {
-            aqi,
-            timeStamp
-          };
-        }
-        console.log(`Original Data: ${JSON.stringify(data)}`);
-        console.log(`New Data: ${JSON.stringify(message)}`);
-        console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
-        dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
-        dispatch({
-          type: "historical-data-change",
-          historicalData: {
-            [timeStamp]: newHistoricalData
-          }
-        });
-      };
-    }
+    ws.current.onmessage = (event) => {
+      if (!getAQIData) return;
 
-    return () => {
-      if (getAQIData) {
-        ws.onclose = () => {
-          console.log("stopListeningToWebSocket");
-          // on connecting, do nothing but log it to the console
-          console.log("connected");
+      // listen to data sent from the websocket server
+      const message = JSON.parse(event.data);
+      const newHistoricalData = {};
+      const timeStamp = Math.floor(Date.now());
+
+      for (const cityWiseData of message) {
+        const city = cityWiseData["city"];
+        const aqi = cityWiseData["aqi"];
+        console.log(`city: ${city}, aqi: ${aqi}`);
+        newHistoricalData[city] = {
+          aqi,
+          timeStamp
         };
       }
+      console.log(`Original Data: ${JSON.stringify(data)}`);
+      console.log(`New Data: ${JSON.stringify(message)}`);
+      console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
+      dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
+      dispatch({
+        type: "historical-data-change",
+        historicalData: {
+          [timeStamp]: newHistoricalData
+        }
+      });
     };
   }, [getAQIData]);
 
