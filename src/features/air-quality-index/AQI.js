@@ -109,28 +109,27 @@ function reducer(state, action) {
 
 const ws = new WebSocket("ws://city-ws.herokuapp.com");
 
-function startListeningToWebSocket() {
-  console.log("startListeningToWebSocket");
-  ws.onopen = () => {
-    // on connecting, do nothing but log it to the console
-    console.log("connected");
-  };
-}
-
-function stopListeningToWebSocket() {
-  console.log("stopListeningToWebSocket");
-  ws.onopen = () => {
-    // on connecting, do nothing but log it to the console
-    console.log("connected");
-  };
-}
-
 export function AQI() {
   const [data, setData] = useState([]);
   const [historicalData, setHistoricalData] = useState({});
+  const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  function startListeningToWebSocket() {
+    setGetAQIData(true);
+  }
+
+  function stopListeningToWebSocket() {
+    setGetAQIData(false);
+  }
+
   useEffect(() => {
+    ws.onopen = () => {
+      console.log("startListeningToWebSocket");
+      // on connecting, do nothing but log it to the console
+      console.log("connected");
+    };
+
     ws.onmessage = (event) => {
       // listen to data sent from the websocket server
       const message = JSON.parse(event.data);
@@ -158,7 +157,14 @@ export function AQI() {
       });
     };
 
-  }, []);
+    return () => {
+      ws.onclose = () => {
+        console.log("stopListeningToWebSocket");
+        // on connecting, do nothing but log it to the console
+        console.log("connected");
+      };
+    };
+  }, [getAQIData]);
 
   return (
     <div>
