@@ -112,7 +112,6 @@ export function AQI() {
   const [historicalData, setHistoricalData] = useState({});
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const ws = useRef(null);
 
   function startListeningToWebSocket() {
     setGetAQIData(true);
@@ -123,31 +122,22 @@ export function AQI() {
   }
 
   useEffect(() => {
-    if (getAQIData) {
-      ws.current = new WebSocket("ws://city-ws.herokuapp.com");
+    if (!getAQIData) return;
 
-      ws.current.onopen = () => {
-        console.log("startListeningToWebSocket");
-        // on connecting, do nothing but log it to the console
-        console.log("connected");
-      };
-      ws.current.onclose = () => {
-        console.log("stopListeningToWebSocket");
-        // on connecting, do nothing but log it to the console
-        console.log("disconnected");
-      };
-    }
-    return () => {
-      if (getAQIData) {
-        ws.current.close();
-      }
+    const ws = new WebSocket("ws://city-ws.herokuapp.com");
+    ws.onopen = () => {
+      console.log("startListeningToWebSocket");
+      // on connecting, do nothing but log it to the console
+      console.log("connected");
     };
-  }, [getAQIData]);
+    ws.onclose = () => {
+      console.log("stopListeningToWebSocket");
+      // on connecting, do nothing but log it to the console
+      console.log("disconnected");
+    };
 
-  useEffect(() => {
-    if (!ws.current) return;
-
-    ws.current.onmessage = (event) => {
+    ws.onmessage = (event) => {
+      console.log("onmessage");
       if (!getAQIData) return;
 
       // listen to data sent from the websocket server
@@ -174,6 +164,11 @@ export function AQI() {
           [timeStamp]: newHistoricalData
         }
       });
+    };
+    return () => {
+      if (getAQIData) {
+        ws.close();
+      }
     };
   }, [getAQIData]);
 
