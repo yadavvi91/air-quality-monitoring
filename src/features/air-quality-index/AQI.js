@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./AQI.css";
+import { Button } from "antd";
 
 const initialState = {
   data: {},
@@ -147,8 +148,8 @@ export function AQI() {
 
   return (
     <>
-      <button onClick={(event) => startListeningToWebSocket()}>Start</button>
-      <button onClick={(event) => stopListeningToWebSocket()}>Stop</button>
+      <Button onClick={(event) => startListeningToWebSocket()}>Start</Button>
+      <Button onClick={(event) => stopListeningToWebSocket()}>Stop</Button>
       <div className="aqi_table">
         <div>
           <div className="aqi_tr aqi_td">
