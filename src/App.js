@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import "./App.css";
@@ -9,6 +9,7 @@ import { AQIHistoricalData } from "./features/aqi-historical-data/AQIHistoricalD
 const { Header, Content } = Layout;
 
 function App() {
+  const [historicalData, setHistoricalData] = useState([]);
   return (
     <Router className="App">
       <Layout className="layout">
@@ -35,13 +36,13 @@ function App() {
         <Content>
           <Switch>
             <Route path="/" exact={true}>
-              <AQI />
+              <AQI setHistoricalData={setHistoricalData} />
             </Route>
             <Route path="/about" exact={true}>
               <AQIReference />
             </Route>
             <Route path="/historical-data" exact={true}>
-              <AQIHistoricalData />
+              <AQIHistoricalData historicalData={historicalData} />
             </Route>
           </Switch>
         </Content>

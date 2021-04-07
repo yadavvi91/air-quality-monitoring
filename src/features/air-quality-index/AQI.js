@@ -72,7 +72,8 @@ function reducer(state, action) {
     };
   } else if (action.type === "historical-data-change") {
     const newHistoricalData = [...historicalData, action.historicalData];
-    console.log(newHistoricalData);
+    action.setHistoricalData(newHistoricalData);
+    // console.log(newHistoricalData);
     return {
       data,
       consumableData,
@@ -83,7 +84,8 @@ function reducer(state, action) {
   }
 }
 
-export function AQI() {
+export function AQI(props) {
+  const { setHistoricalData } = props;
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -136,7 +138,8 @@ export function AQI() {
         type: "historical-data-change",
         historicalData: {
           [timeStamp]: newHistoricalData
-        }
+        },
+        setHistoricalData
       });
     };
     return () => {
@@ -144,7 +147,7 @@ export function AQI() {
         ws.close();
       }
     };
-  }, [getAQIData]);
+  }, [getAQIData, setHistoricalData]);
 
   return (
     <>
