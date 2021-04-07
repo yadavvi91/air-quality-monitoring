@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import "./AQI.css";
 import { Button } from "antd";
+import { HistoricalDataContext } from "../historical-data-context/HistoricalDataProvider";
 
 const initialState = {
   data: {},
@@ -84,10 +85,12 @@ function reducer(state, action) {
   }
 }
 
-export function AQI(props) {
-  const { setHistoricalData } = props;
+export function AQI() {
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { historicalData, setHistoricalData, aCallback } = useContext(
+    HistoricalDataContext
+  );
 
   function startListeningToWebSocket() {
     setGetAQIData(true);

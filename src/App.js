@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import "./App.css";
 import { AQI } from "./features/air-quality-index/AQI";
 import { AQIReference } from "./features/air-quality-reference/AQIReference";
 import { AQIHistoricalData } from "./features/aqi-historical-data/AQIHistoricalData";
+import HistoricalDataProvider from "./features/historical-data-context/HistoricalDataProvider";
 
 const { Header, Content } = Layout;
 
 function App() {
-  const [historicalData, setHistoricalData] = useState([]);
   return (
     <Router className="App">
       <Layout className="layout">
@@ -34,17 +34,19 @@ function App() {
           </Menu>
         </Header>
         <Content>
-          <Switch>
-            <Route path="/" exact={true}>
-              <AQI setHistoricalData={setHistoricalData} />
-            </Route>
-            <Route path="/about" exact={true}>
-              <AQIReference />
-            </Route>
-            <Route path="/historical-data" exact={true}>
-              <AQIHistoricalData historicalData={historicalData} />
-            </Route>
-          </Switch>
+          <HistoricalDataProvider>
+            <Switch>
+              <Route path="/" exact={true}>
+                <AQI />
+              </Route>
+              <Route path="/about" exact={true}>
+                <AQIReference />
+              </Route>
+              <Route path="/historical-data" exact={true}>
+                <AQIHistoricalData />
+              </Route>
+            </Switch>
+          </HistoricalDataProvider>
         </Content>
       </Layout>
     </Router>
