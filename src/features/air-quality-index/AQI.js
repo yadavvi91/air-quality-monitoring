@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import "./AQI.css";
 import { Button } from "antd";
-import { AppContext } from "../../App";
 
 const initialState = {
   data: {},
@@ -76,10 +75,10 @@ function reducer(state, action) {
   }
 }
 
-export function AQI() {
+export const AQI = React.memo((props) => {
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { appState, appDispatch } = useContext(AppContext);
+  const { appDispatch } = props;
 
   const setAppStateHistoricalData = (historicalData) => {
     appDispatch({
@@ -164,4 +163,4 @@ export function AQI() {
       </div>
     </>
   );
-}
+});
