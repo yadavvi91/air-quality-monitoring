@@ -5,7 +5,7 @@ export const AQIHistoricalData = (props) => {
   console.log(JSON.stringify(props.state.historicalData));
   props.state.historicalData.map((data) => {
     const timeStamp = Object.keys(data)[0];
-    const date = new Date(timeStamp);
+    const date = new Date(timeStamp / 1000);
     const citiesData = data[timeStamp];
     const printableTimeStamp = date.toString();
     console.log(printableTimeStamp);
