@@ -146,7 +146,7 @@ export function AQI() {
   }, [getAQIData]);
 
   return (
-    <div>
+    <>
       <button onClick={(event) => startListeningToWebSocket()}>Start</button>
       <button onClick={(event) => stopListeningToWebSocket()}>Stop</button>
       <div className="aqi_table">
@@ -169,6 +169,6 @@ export function AQI() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

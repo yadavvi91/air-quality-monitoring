@@ -5,23 +5,45 @@ import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import { AQI } from "./features/air-quality-index/AQI";
 import { AQIReference } from "./features/air-quality-reference/AQIReference";
+import { Layout, Menu } from "antd";
+
+const { Header, Content } = Layout;
 
 function App() {
   return (
     <Router className="App">
-      <Switch>
-        <Route path="/about">
-          <AQIReference />
-        </Route>
-        <Route path="/">
-          {/*<img src={logo} className="App-logo" alt="logo" />*/}
-          {/*<Counter />*/}
-          <AQI />
-          {/*<p>*/}
-          {/*  Edit <code>src/App.js</code> and save to reload.*/}
-          {/*</p>*/}
-        </Route>
-      </Switch>
+      <Layout className="layout">
+        <Header>
+          <div className="logo" />
+          <Menu theme="dark" mode="horizontal" defaultSelectedKeys={["1"]}>
+            <Menu.Item key="1">
+              <Link to="/">
+                <span>AQI</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="2">
+              <Link to="/about">
+                <span>AQI Reference</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="3">
+              <Link to="/about">
+                <span>AQI Reference</span>
+              </Link>
+            </Menu.Item>
+          </Menu>
+        </Header>
+        <Content>
+          <Switch>
+            <Route path="/about">
+              <AQIReference />
+            </Route>
+            <Route path="/">
+              <AQI />
+            </Route>
+          </Switch>
+        </Content>
+      </Layout>
     </Router>
   );
 }
