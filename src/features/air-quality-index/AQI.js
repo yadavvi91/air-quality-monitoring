@@ -125,9 +125,7 @@ export const AQI = React.memo((props) => {
 
       dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
       setAppStateHistoricalData({
-        historicalData: {
-          [timeStamp]: newHistoricalData
-        }
+        [timeStamp]: newHistoricalData
       });
     };
     return () => {
