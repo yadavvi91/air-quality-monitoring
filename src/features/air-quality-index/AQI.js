@@ -1,33 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 import "./AQI.css";
 
-const oldData = [
-  {
-    city: "Mumbai",
-    aqi: 182,
-    category: "moderate",
-    prevTime: undefined,
-    currTime: 1617251117777,
-    text: "A few seconds ago"
-  },
-  {
-    city: "Delhi",
-    aqi: 300,
-    category: "poor",
-    prevTime: undefined,
-    currTime: 1617251117777,
-    text: "A few seconds ago"
-  },
-  {
-    city: "Bhubaneswar",
-    aqi: 100,
-    category: "satisfactory",
-    prevTime: undefined,
-    currTime: 1617251117777,
-    text: "A few seconds ago"
-  }
-];
-
 const initialState = {
   data: {},
   consumableData: [],
