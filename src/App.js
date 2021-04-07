@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Layout, Menu } from "antd";
 import logo from "./logo.svg";
 import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import { AQI } from "./features/air-quality-index/AQI";
 import { AQIReference } from "./features/air-quality-reference/AQIReference";
-import { Layout, Menu } from "antd";
+import { AQIHistoricalData } from "./features/aqi-historical-data/AQIHistoricalData";
 
 const { Header, Content } = Layout;
 
@@ -22,8 +23,8 @@ function App() {
               </Link>
             </Menu.Item>
             <Menu.Item key="2">
-              <Link to="/about">
-                <span>AQI Reference</span>
+              <Link to="/historical-data">
+                <span>AQI Historical Data</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="3">
@@ -35,11 +36,14 @@ function App() {
         </Header>
         <Content>
           <Switch>
+            <Route path="/">
+              <AQI />
+            </Route>
             <Route path="/about">
               <AQIReference />
             </Route>
-            <Route path="/">
-              <AQI />
+            <Route path="/historical-data">
+              <AQIHistoricalData />
             </Route>
           </Switch>
         </Content>

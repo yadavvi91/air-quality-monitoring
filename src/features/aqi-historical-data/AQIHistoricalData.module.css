@@ -1,0 +1,53 @@
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-transform: uppercase;
+}
+
+table {
+  width: 400px;
+
+  margin: 20px;
+
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+table tr {
+  height: 30px;
+}
+thead {
+  color: #898484;
+}
+
+tbody {
+  text-align: center;
+}
+
+td {
+  border: none;
+  text-transform: none;
+}
+
+.good {
+  background-color: #55A84F;
+}
+.satisfactory {
+  background-color: #A3C853;
+}
+.moderate {
+  background-color: #FFF833;
+}
+.poor {
+  background-color: #F29C33;
+}
+.very_poor {
+  background-color: #E93F33;
+}
+.severe {
+  background-color: #AF2D24;
+}
+
