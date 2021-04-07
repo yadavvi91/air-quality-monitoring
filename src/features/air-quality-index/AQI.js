@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./AQI.css";
 import { Button } from "antd";
 
@@ -71,10 +71,12 @@ function reducer(state, action) {
       historicalData
     };
   } else if (action.type === "historical-data-change") {
+    const newHistoricalData = [...historicalData, action.historicalData];
+    console.log(newHistoricalData);
     return {
       data,
       consumableData,
-      historicalData: [...historicalData, action.historicalData]
+      historicalData: newHistoricalData
     };
   } else {
     throw new Error();
@@ -82,8 +84,6 @@ function reducer(state, action) {
 }
 
 export function AQI() {
-  const [data, setData] = useState([]);
-  const [historicalData, setHistoricalData] = useState({});
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
 
