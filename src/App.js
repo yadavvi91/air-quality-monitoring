@@ -36,13 +36,13 @@ function App() {
         </Header>
         <Content>
           <Switch>
-            <Route path="/">
+            <Route path="/" exact={true}>
               <AQI />
             </Route>
-            <Route path="/about">
+            <Route path="/about" exact={true}>
               <AQIReference />
             </Route>
-            <Route path="/historical-data">
+            <Route path="/historical-data" exact={true}>
               <AQIHistoricalData />
             </Route>
           </Switch>
