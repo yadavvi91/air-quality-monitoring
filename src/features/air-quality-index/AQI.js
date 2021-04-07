@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import "./AQI.css";
 import { Button } from "antd";
-import { HistoricalDataContext } from "../historical-data-context/HistoricalDataProvider";
+import { AppContext } from "../../App";
 
 const initialState = {
   data: {},
@@ -71,15 +71,6 @@ function reducer(state, action) {
       consumableData: newConsumableData,
       historicalData
     };
-  } else if (action.type === "historical-data-change") {
-    const newHistoricalData = [...historicalData, action.historicalData];
-    action.setHistoricalData(newHistoricalData);
-    // console.log(newHistoricalData);
-    return {
-      data,
-      consumableData,
-      historicalData: newHistoricalData
-    };
   } else {
     throw new Error();
   }
@@ -88,10 +79,14 @@ function reducer(state, action) {
 export function AQI() {
   const [getAQIData, setGetAQIData] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { historicalData, setHistoricalData, aCallback } = useContext(
-    HistoricalDataContext
-  );
+  const { appState, appDispatch } = useContext(AppContext);
 
+  const setAppStateHistoricalData = (historicalData) => {
+    appDispatch({
+      type: "set-historical-data",
+      historicalData: historicalData
+    });
+  };
   function startListeningToWebSocket() {
     setGetAQIData(true);
   }
@@ -105,13 +100,9 @@ export function AQI() {
 
     const ws = new WebSocket("ws://city-ws.herokuapp.com");
     ws.onopen = () => {
-      console.log("startListeningToWebSocket");
-      // on connecting, do nothing but log it to the console
       console.log("connected");
     };
     ws.onclose = () => {
-      console.log("stopListeningToWebSocket");
-      // on connecting, do nothing but log it to the console
       console.log("disconnected");
     };
 
@@ -127,22 +118,17 @@ export function AQI() {
       for (const cityWiseData of message) {
         const city = cityWiseData["city"];
         const aqi = cityWiseData["aqi"];
-        // console.log(`city: ${city}, aqi: ${aqi}`);
         newHistoricalData[city] = {
           aqi,
           timeStamp
         };
       }
-      // console.log(`Original Data: ${JSON.stringify(data)}`);
-      // console.log(`New Data: ${JSON.stringify(message)}`);
-      // console.log(`Historical Data: ${JSON.stringify(historicalData)}`);
+
       dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
-      dispatch({
-        type: "historical-data-change",
+      setAppStateHistoricalData({
         historicalData: {
           [timeStamp]: newHistoricalData
-        },
-        setHistoricalData
+        }
       });
     };
     return () => {
@@ -150,7 +136,7 @@ export function AQI() {
         ws.close();
       }
     };
-  }, [getAQIData, setHistoricalData]);
+  }, [getAQIData, setAppStateHistoricalData]);
 
   return (
     <>
