@@ -11,17 +11,28 @@ const { Header, Content } = Layout;
 
 const initialState = {
   cities: [],
-  historicalData: []
+  historicalData: [],
+  cityWiseData: {}
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "set-historical-data":
       console.log(action.historicalData);
+      const newCityWiseData = action.cityWiseData;
+      Object.keys(newCityWiseData).forEach((city) => {
+        const oldData = state.cityWiseData[city];
+        if (oldData === undefined) {
+          state.cityWiseData[city] = [newCityWiseData[city]];
+        } else {
+          state.cityWiseData[city].push(newCityWiseData[city]);
+        }
+      });
       return {
         ...state,
         cities: [...new Set([...state.cities, ...action.cities])],
-        historicalData: [...state.historicalData, action.historicalData]
+        historicalData: [...state.historicalData, action.historicalData],
+        cityWiseData: state.cityWiseData
       };
     default:
       return state;
@@ -75,6 +86,7 @@ function App() {
               <CityAQI
                 cities={state.cities}
                 historicalData={state.historicalData}
+                cityWiseData={state.cityWiseData}
               />
             </Route>
             <Route path="/historical-data" exact={true}>

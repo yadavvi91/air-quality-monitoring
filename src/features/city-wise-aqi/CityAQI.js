@@ -2,9 +2,11 @@ import React from "react";
 import "./CityAQI.css";
 
 export const CityAQI = (props) => {
-  const { cities } = props;
+  const { cities, cityWiseData } = props;
+
   function handleCitySelect(event) {
     console.log(event);
+    console.log(cityWiseData[event.target.value]);
   }
 
   return (

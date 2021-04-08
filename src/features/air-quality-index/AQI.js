@@ -80,11 +80,12 @@ export const AQI = React.memo((props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { appDispatch } = props;
 
-  const setAppStateHistoricalData = (historicalData, cities) => {
+  const setAppStateHistoricalData = (historicalData, cities, cityWiseData) => {
     appDispatch({
       type: "set-historical-data",
       historicalData,
-      cities
+      cities,
+      cityWiseData
     });
   };
   function startListeningToWebSocket() {
@@ -115,15 +116,21 @@ export const AQI = React.memo((props) => {
       const newHistoricalData = {};
       const timeStamp = Math.floor(Date.now());
       const cities = [];
+      const cityWiseData = {};
 
-      for (const cityWiseData of message) {
-        const city = cityWiseData["city"];
-        const aqi = cityWiseData["aqi"];
+      for (const cityData of message) {
+        const city = cityData["city"];
+        const aqi = cityData["aqi"];
         newHistoricalData[city] = {
           aqi,
           timeStamp
         };
         cities.push(city);
+        cityWiseData[city] = {
+          city,
+          aqi,
+          timeStamp
+        };
       }
 
       dispatch({ type: "data-change", data: message, timeStamp: timeStamp });
@@ -131,7 +138,8 @@ export const AQI = React.memo((props) => {
         {
           [timeStamp]: newHistoricalData
         },
-        [...new Set(cities)]
+        [...new Set(cities)],
+        cityWiseData
       );
     };
     return () => {
