@@ -72,7 +72,10 @@ function App() {
               <AQI appDispatch={appDispatch} />
             </Route>
             <Route path="/city-aqi" exact={true}>
-              <CityAQI cities={state.cities} />
+              <CityAQI
+                cities={state.cities}
+                historicalData={state.historicalData}
+              />
             </Route>
             <Route path="/historical-data" exact={true}>
               <AQIHistoricalData state={state} />
